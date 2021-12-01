@@ -4,7 +4,11 @@
       Выбери правильный бак для <br />
       сортировки мусора!
     </h1>
-    <game-selector v-model="currentItem" />
+    <div class="row">
+      <answer-container v-show="isStarted" answerType="wrongAnswer" />
+      <game-selector @change="isStarted = $event" />
+      <answer-container v-show="isStarted" answerType="correctAnswer" />
+    </div>
     <ul class="buck-list">
       <li class="buck-item">
         <buck-item name="Второсырьё" color="yellow" />
@@ -13,7 +17,7 @@
         <buck-item name="Смешанные" color="green" />
       </li>
       <li class="buck-item">
-        <buck-item @click="selectBuck($event)" name="Бытовые" color="blue" />
+        <buck-item name="Бытовые" color="blue" />
       </li>
       <li class="buck-item">
         <buck-item name="Опасные" color="orange" />
@@ -28,15 +32,11 @@ export default {
   components: {
     BuckItem: () => import("./BuckItem"),
     GameSelector: () => import("./GameSelector"),
-  },
-  methods: {
-    selectBuck(event) {
-      console.log(event);
-    },
+    AnswerContainer: () => import("./AnswerContainer"),
   },
   data() {
     return {
-      currentItem: null,
+      isStarted: false,
     };
   },
 };

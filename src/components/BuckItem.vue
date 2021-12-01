@@ -1,13 +1,12 @@
 <template>
-  <div @click="selectBuck($props)" class="buck-container">
+  <div class="buck-container">
     <div :style="'background:' + color" class="name-container">
       <h3 class="buck-name">{{ name }}</h3>
     </div>
-    <div class="image-container">
+    <div @click="selectBuck" class="image-container">
       <img
         class="buck-top__img"
         :src="require(`@/assets/img/bucks/buck_top/wastetop_${color}.png`)"
-        alt=""
       />
       <img
         class="buck-img"
@@ -18,6 +17,8 @@
 </template>
 
 <script>
+import { trashList } from "@/utils/trashList";
+import { randomInteger } from "@/utils/randomInteger";
 export default {
   name: "BuckItem",
   props: {
@@ -30,10 +31,19 @@ export default {
       required: true,
     },
   },
+  computed: {
+    currentItem: function () {
+      return this.$store.state.currentItem;
+    },
+  },
   methods: {
-    selectBuck(req) {
-      console.log(req);
-      this.$emit("click", "something");
+    selectBuck() {
+      const isValid = this.currentItem.type === this.name;
+      this.$store.dispatch("answerHandler", isValid);
+      return this.$store.dispatch(
+        "setCurrentItem",
+        trashList[randomInteger(0, trashList.length - 1)]
+      );
     },
   },
 };

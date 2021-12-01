@@ -25,19 +25,28 @@ export default {
   data() {
     return {
       timerHandler: true,
-      currentItem: null,
     };
+  },
+  computed: {
+    currentItem: function () {
+      return this.$store.state.currentItem;
+    },
   },
   methods: {
     startGame() {
       this.timerHandler = false;
-      this.currentItem = trashList[randomInteger(0, trashList.length - 1)];
-      return this.$emit("change", this.currentItem);
+      this.$emit("change", true);
+      return this.$store.dispatch(
+        "setCurrentItem",
+        trashList[randomInteger(0, trashList.length - 1)]
+      );
     },
   },
   watch: {
     timerHandler(newVal) {
-      console.log(newVal);
+      if (newVal) {
+        this.$emit("change", false);
+      }
     },
   },
 };
