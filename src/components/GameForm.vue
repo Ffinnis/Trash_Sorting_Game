@@ -4,7 +4,7 @@
       Выбери правильный бак для <br />
       сортировки мусора!
     </h1>
-    <button class="start-button">Начать!</button>
+    <game-selector v-model="currentItem" />
     <ul class="buck-list">
       <li class="buck-item">
         <buck-item name="Второсырьё" color="yellow" />
@@ -13,7 +13,7 @@
         <buck-item name="Смешанные" color="green" />
       </li>
       <li class="buck-item">
-        <buck-item name="Бытовые" color="blue" />
+        <buck-item @click="selectBuck($event)" name="Бытовые" color="blue" />
       </li>
       <li class="buck-item">
         <buck-item name="Опасные" color="orange" />
@@ -27,6 +27,17 @@ export default {
   name: "GameForm",
   components: {
     BuckItem: () => import("./BuckItem"),
+    GameSelector: () => import("./GameSelector"),
+  },
+  methods: {
+    selectBuck(event) {
+      console.log(event);
+    },
+  },
+  data() {
+    return {
+      currentItem: null,
+    };
   },
 };
 </script>
@@ -46,20 +57,6 @@ export default {
   line-height: 40px;
   color: #4d4280;
   text-align: center;
-}
-.start-button {
-  border-radius: 50%;
-  padding: 18px 5px;
-  background-color: #ac8cdd;
-  border: none;
-  color: #fff;
-  font-size: 30px;
-  line-height: 38px;
-  width: 140px;
-  height: 140px;
-  cursor: pointer;
-  font-weight: bold;
-  margin: 60px 0 0;
 }
 .buck-list {
   display: flex;
