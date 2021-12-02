@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     currentItem: {},
+    buckLocation: {},
     correctAnswer: 0,
     wrongAnswer: 0,
   },
@@ -19,6 +20,13 @@ export default new Vuex.Store({
       }
       return (state.wrongAnswer += 1);
     },
+    resetAnswers(state) {
+      state.wrongAnswer = 0;
+      return (state.correctAnswer = 0);
+    },
+    setBuckLocation(state, payload) {
+      return (state.buckLocation = payload);
+    },
   },
   actions: {
     setCurrentItem({ commit }, payload) {
@@ -26,6 +34,12 @@ export default new Vuex.Store({
     },
     answerHandler({ commit }, bool) {
       return commit("answerHandler", bool);
+    },
+    resetAnswers({ commit }) {
+      return commit("resetAnswers");
+    },
+    setBuckLocation({ commit }, payload) {
+      return commit("setBuckLocation", payload);
     },
   },
   modules: {},

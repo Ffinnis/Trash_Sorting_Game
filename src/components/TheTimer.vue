@@ -46,7 +46,7 @@ export default {
   watch: {
     percentage(newVal) {
       if (newVal > 100) {
-        this.$emit("change", true);
+        return this.$emit("change", true);
       }
     },
   },

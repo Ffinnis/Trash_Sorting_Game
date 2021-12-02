@@ -6,9 +6,11 @@
     <div @click="selectBuck" class="image-container">
       <img
         class="buck-top__img"
+        :class="selected ? 'selected' : ''"
         :src="require(`@/assets/img/bucks/buck_top/wastetop_${color}.png`)"
       />
       <img
+        :ref="color"
         class="buck-img"
         :src="require(`@/assets/img/bucks/wastebox_${color}.png`)"
       />
@@ -31,19 +33,41 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      selected: false,
+    };
+  },
   computed: {
     currentItem: function () {
       return this.$store.state.currentItem;
+    },
+    location: function () {
+      const currentRect = this.$refs[`${this.color}`].getBoundingClientRect();
+      return {
+        top: currentRect.top,
+        left: currentRect.left,
+      };
     },
   },
   methods: {
     selectBuck() {
       const isValid = this.currentItem.type === this.name;
+      this.animateBuck();
       this.$store.dispatch("answerHandler", isValid);
-      return this.$store.dispatch(
-        "setCurrentItem",
-        trashList[randomInteger(0, trashList.length - 1)]
-      );
+      return setTimeout(() => {
+        return this.$store.dispatch(
+          "setCurrentItem",
+          trashList[randomInteger(0, trashList.length - 1)]
+        );
+      }, 500);
+    },
+    animateBuck() {
+      this.selected = true;
+      setTimeout(() => {
+        this.selected = false;
+      }, 600);
+      this.$store.dispatch("setBuckLocation", this.location);
     },
   },
 };
@@ -83,6 +107,12 @@ export default {
     width: 70px;
     top: 20px;
     left: 27px;
+    &.selected {
+      animation-name: slideTopImage;
+      animation-duration: 0.5s;
+      animation-iteration-count: 2;
+      animation-direction: alternate;
+    }
   }
   &::after {
     width: 125px;
@@ -91,6 +121,15 @@ export default {
     content: "";
     position: absolute;
     top: 125px;
+  }
+}
+@keyframes slideTopImage {
+  from {
+    top: 20px;
+  }
+
+  to {
+    top: -25px;
   }
 }
 </style>

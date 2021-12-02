@@ -8,6 +8,8 @@
       <img
         :src="require(`@/assets/img/trash/${this.currentItem.img_src}.svg`)"
         class="question-image"
+        ref="question-image"
+        v-if="show"
       />
     </div>
   </div>
@@ -25,11 +27,22 @@ export default {
   data() {
     return {
       timerHandler: true,
+      show: true,
     };
   },
   computed: {
     currentItem: function () {
       return this.$store.state.currentItem;
+    },
+    selectedBuckLocation: function () {
+      return this.$store.state.buckLocation;
+    },
+    imageLocation: function () {
+      const currentRect = this.$refs["question-image"].getBoundingClientRect();
+      return {
+        top: currentRect.top,
+        left: currentRect.left,
+      };
     },
   },
   methods: {
@@ -45,8 +58,23 @@ export default {
   watch: {
     timerHandler(newVal) {
       if (newVal) {
-        this.$emit("change", false);
+        this.$store.dispatch("resetAnswers");
+        return this.$emit("change", false);
       }
+    },
+    selectedBuckLocation(newVal) {
+      this.$refs["question-image"].style.top = `${
+        newVal.top - this.imageLocation.top + 20
+      }px`;
+      this.$refs["question-image"].style.left = `${
+        newVal.left - this.imageLocation.left + 50
+      }px`;
+      setTimeout(() => {
+        this.show = false;
+      }, 500);
+      setTimeout(() => {
+        this.show = true;
+      }, 500);
     },
   },
 };
@@ -80,6 +108,7 @@ export default {
     height: 90px;
     left: 45px;
     top: 45px;
+    transition: top, left, 0.5s linear;
   }
 }
 </style>
